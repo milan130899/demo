@@ -19,7 +19,7 @@ const Routes = () => {
       //   .collection('Users')
       //   .doc(user.email)
       //   .update({is_online: 'true'});
-
+      //update
       await firestore()
         .collection('Users')
         .doc(user.email)
