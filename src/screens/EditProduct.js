@@ -28,10 +28,11 @@ import Product from './Product';
 
 const EditProduct = ({route, navigation}) => {
   const {user} = useContext(AuthContext);
-  const [productTitle, setProductTitle] = useState('');
-  const [productDescription, setProductDescription] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
   const {title, description, img_url, pro_key} = route.params;
+  const [productTitle, setProductTitle] = useState(title);
+  const [productDescription, setProductDescription] = useState(description);
+  const [modalVisible, setModalVisible] = useState(false);
+
   // const prokey = pro_key;
   /************************Update User*************************************/
   // const getUser = async () => {
@@ -274,7 +275,7 @@ const EditProduct = ({route, navigation}) => {
               <Text style={styles.titleText}>Title :</Text>
               <View style={styles.titleContainer}>
                 <TextInput
-                  defaultValue={title}
+                  defaultValue={productTitle}
                   placeholder="Enter Title"
                   onChangeText={(text) => setProductTitle(text)}
                   style={styles.titleTextInput}
@@ -283,7 +284,7 @@ const EditProduct = ({route, navigation}) => {
               <Text style={styles.descText}>Description :</Text>
               <View style={styles.descContainer}>
                 <TextInput
-                  defaultValue={description}
+                  defaultValue={productDescription}
                   placeholder="Enter Description"
                   onChangeText={(text) => setProductDescription(text)}
                   style={styles.descTextInput}
