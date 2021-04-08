@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {AuthContext} from '../navigation/AuthProvider';
@@ -20,12 +21,17 @@ const ProductsCompo = ({editIcon, barVisible, containerStyle}) => {
   const {user} = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [temp, setTemp] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
+  const limit = 5;
   /************************Get Products*************************************/
   const getData = () => {
-    const subscribe = firestore()
+    setLoading(true);
+    firestore()
       .collection('Products')
       .where('user_id', '==', user.uid)
+      .orderBy('Title', 'desc')
+      .limit(limit)
       .onSnapshot((querySnapshot) => {
         const products = [];
         querySnapshot.forEach((documentSnapshot) => {
@@ -34,16 +40,55 @@ const ProductsCompo = ({editIcon, barVisible, containerStyle}) => {
             key: documentSnapshot.id,
           });
         });
+        setLoading(false);
         setData(products);
         setTemp(products);
-        //console.log('**********', products);
       });
-    return subscribe;
   };
-
   useEffect(() => getData(), []);
-  /************************Get Products*************************************/
 
+  const moreData = () => {
+    const lastVisible = data[data.length - 1].Title;
+    console.log('Length of data ', lastVisible);
+    setLoading(true);
+    firestore()
+      .collection('Products')
+      .where('user_id', '==', user.uid)
+      .orderBy('Title', 'desc')
+      .startAfter(lastVisible)
+      .limit(limit)
+      .onSnapshot((querySnapshot) => {
+        const products = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          products.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+
+        setLoading(false);
+        setData([...data, ...products]);
+        setTemp([...temp, ...products]);
+      });
+  };
+  /************************Get Products*************************************/
+  /*****************************Load More Button**************************************** */
+  const renderFooter = () => {
+    return (
+      <View style={styles.footer}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={moreData}
+          style={styles.loadMoreBtn}>
+          <Text style={styles.btnText}>Load More</Text>
+          {isLoading ? (
+            <ActivityIndicator color="white" style={{marginLeft: 8}} />
+          ) : null}
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  /**************************Load More Button*************************************** */
   /**********************Search Bar*************************************/
   const [searchText, setSearchText] = useState('');
 
@@ -108,37 +153,36 @@ const ProductsCompo = ({editIcon, barVisible, containerStyle}) => {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <ScrollView>
-          {barVisible ? (
-            <SearchBar
-              placeholder="Search here..."
-              onChangeText={updateSearch}
-              value={searchText}
-              round
-              lightTheme
-              containerStyle={{}}
-              inputContainerStyle={{height: windowHeight / 19}}
-              inputStyle={{justifyContent: 'center', alignItems: 'center'}}
-              searchIcon={{size: 30}}
-            />
-          ) : null}
-          <FlatList
-            data={data}
-            //ListHeaderComponent={renderHeader}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => (
-              <Item
-                title={item.Title}
-                description={item.Description}
-                user_id={item.user_id}
-                img_url={item.ImageUrl}
-                editIcon={editIcon}
-                pro_key={item.key}
-              />
-            )}
-            contentContainerStyle={containerStyle}
+        {barVisible ? (
+          <SearchBar
+            placeholder="Search here..."
+            onChangeText={updateSearch}
+            value={searchText}
+            round
+            lightTheme
+            containerStyle={{}}
+            inputContainerStyle={{height: windowHeight / 19}}
+            inputStyle={{justifyContent: 'center', alignItems: 'center'}}
+            searchIcon={{size: 30}}
           />
-        </ScrollView>
+        ) : null}
+        <FlatList
+          data={data}
+          //ListHeaderComponent={renderHeader}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <Item
+              title={item.Title}
+              description={item.Description}
+              user_id={item.user_id}
+              img_url={item.ImageUrl}
+              editIcon={editIcon}
+              pro_key={item.key}
+            />
+          )}
+          contentContainerStyle={containerStyle}
+          ListFooterComponent={renderFooter}
+        />
       </SafeAreaView>
     </>
   );
