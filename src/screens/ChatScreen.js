@@ -68,19 +68,6 @@ export default function ChatScreen({route}) {
           email: currentUser.email,
         },
       });
-
-    // await firestore()
-    //   .collection('THREADS')
-    //   .doc(thread._id)
-    //   .set(
-    //     {
-    //       latestMessage: {
-    //         text,
-    //         createdAt: new Date().getTime(),
-    //       },
-    //     },
-    //     {merge: true},
-    //   );
   }
 
   useEffect(() => {
