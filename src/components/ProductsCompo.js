@@ -145,8 +145,7 @@ const ProductsCompo = ({editIcon, barVisible, containerStyle}) => {
 };
 const styles = StyleSheet.create({
   container: {
-    height: windowHeight / 1,
-    width: windowWidth / 1,
+    flex: 1,
   },
 
   item: {

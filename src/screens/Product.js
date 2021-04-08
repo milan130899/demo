@@ -167,8 +167,8 @@ const Product = ({navigation}) => {
       .then(() => {
         console.log('Product Added!!');
         Alert.alert('Product Added!!', 'Your Product has been Added!!');
-      })
-      .then(() => navigation.navigate('Home'));
+      });
+    //.then(() => navigation.navigate('Home'));
   };
 
   const submitPhoto = async () => {
