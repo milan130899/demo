@@ -8,6 +8,8 @@ target 'loginSignup' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin'
+
   target 'loginSignupTests' do
     inherit! :complete
     # Pods for testing

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   StatusBar,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {createStackNavigator} from '@react-navigation/stack';
 import SpalshScreen from '../../src/components/SpalshScreen';
 import LoginScreen from '../../src/screens/LoginScreen';
@@ -16,6 +17,12 @@ import SignUp from '../../src/screens/SignUp';
 const Stack = createStackNavigator();
 
 const AuthStack = () => {
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '220473869342-nmbftch7ln6gnst6a3v36ko65lslcjh2.apps.googleusercontent.com',
+    });
+  }, []);
   return (
     <Stack.Navigator
       screenOptions={{
