@@ -15,11 +15,6 @@ const Routes = () => {
   const onAuthStateChanged = async (user) => {
     setUser(user);
     if (user) {
-      // await firestore()
-      //   .collection('Users')
-      //   .doc(user.email)
-      //   .update({is_online: 'true'});
-      //update
       await firestore()
         .collection('Users')
         .doc(user.email)
@@ -31,14 +26,6 @@ const Routes = () => {
             logout();
           }
         });
-      // .then((documentSnapshot) => {
-      //   const data_device = documentSnapshot.data();
-
-      //   if (device_id != data_device.device_token) {
-      //     alert('you are signned in other device');
-      //     logout();
-      //   }
-      // });
     }
     if (inisiallizing) setInisiallizing(false);
   };

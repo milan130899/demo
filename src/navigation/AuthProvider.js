@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);
-  const [device, setDevice] = useState(null);
+  const device_id = DeviceInfo.getUniqueId();
   return (
     <AuthContext.Provider
       value={{
@@ -15,22 +15,14 @@ const AuthProvider = ({children}) => {
         setUser,
         login: async (email, password) => {
           try {
-            await auth().signInWithEmailAndPassword(email, password);
-            firestore()
+            const login = await auth().signInWithEmailAndPassword(
+              email,
+              password,
+            );
+            await firestore()
               .collection('Users')
-              .doc(email)
-              .update({device_token: DeviceInfo.getUniqueId()});
-            //.get()
-            //.then((documentSnapshot) => {
-            //   setDevice(documentSnapshot.data());
-            //   const data_device = documentSnapshot.data();
-
-            //   if (data_device.is_online == 'true') {
-            //     alert('no login allow');
-            //   } else {
-            //     auth().signInWithEmailAndPassword(email, password);
-            //   }
-            // });
+              .doc(login.user.email)
+              .update({device_token: device_id});
           } catch (e) {
             //console.log(e);
             ToastAndroid.show(
@@ -54,7 +46,7 @@ const AuthProvider = ({children}) => {
                     emailid: email,
                     imageurl: null,
                     phonenuber: '',
-                    device_token: DeviceInfo.getUniqueId(),
+                    device_token: device_id,
                     is_online: 'true',
                   })
                   .catch((error) => {
@@ -70,10 +62,6 @@ const AuthProvider = ({children}) => {
         },
         logout: async () => {
           try {
-            // firestore()
-            //   .collection('Users')
-            //   .doc(auth().currentUser.email)
-            //   .update({is_online: 'false'});
             await auth().signOut();
           } catch (e) {
             console.log(e);
