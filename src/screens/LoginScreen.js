@@ -18,8 +18,7 @@ import {useState} from 'react';
 import {useContext} from 'react';
 import {AuthContext} from '../navigation/AuthProvider';
 import {windowHeight, windowWidth} from '../utils/Dimentions';
-import Fonts from '../common/Fonts';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import SocialButton from '../components/SocialButton';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -27,7 +26,7 @@ const LoginScreen = ({navigation}) => {
   const [validPass, setValidPass] = useState(true);
   const [emailError, setEmailError] = useState('');
   const [passError, setPassError] = useState('');
-  const {login} = useContext(AuthContext);
+  const {login, googleLogin, fbLogin} = useContext(AuthContext);
   const isValidEmail = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
@@ -86,6 +85,25 @@ const LoginScreen = ({navigation}) => {
           {/* <FormButton buttonTitle="Login" onPress={() => checking()} /> */}
           {/* <Button title="Login" onPress={() => checking()} /> */}
           <FormButton buttonTitle="Login" onPress={() => checking()} />
+          {Platform.OS === 'android' ? (
+            <View>
+              <SocialButton
+                buttonTitle="Sign In with Facebook"
+                btnType="facebook"
+                color="#4867aa"
+                backgroundColor="#e6eaf4"
+                //onPress={() => fbLogin()}
+              />
+
+              <SocialButton
+                buttonTitle="Sign In with Google"
+                btnType="google"
+                color="#de4d41"
+                backgroundColor="#f5e7ea"
+                onPress={() => googleLogin()}
+              />
+            </View>
+          ) : null}
           <View style={styles.accountLine}>
             <Text style={styles.navButtonText}>don't have an account? </Text>
             <TouchableOpacity
