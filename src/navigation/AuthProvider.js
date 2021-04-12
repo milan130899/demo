@@ -3,6 +3,7 @@ import auth from '@react-native-firebase/auth';
 import {Text, View, ToastAndroid} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {AccessToken, LoginManager} from 'react-native-fbsdk-next';
 import DeviceInfo from 'react-native-device-info';
 export const AuthContext = createContext();
 
@@ -67,7 +68,64 @@ const AuthProvider = ({children}) => {
                     );
                   });
               })
-              //we need to catch the whole sign up process if it fails too.
+
+              .catch((error) => {
+                console.log('Something went wrong with sign up: ', error);
+              });
+          } catch (error) {
+            console.log({error});
+          }
+        },
+        fbLogin: async () => {
+          try {
+            const result = await LoginManager.logInWithPermissions([
+              'public_profile',
+              'email',
+            ]);
+
+            if (result.isCancelled) {
+              throw 'User cancelled the login process';
+            }
+
+            // Once signed in, get the users AccesToken
+            const data = await AccessToken.getCurrentAccessToken();
+
+            if (!data) {
+              throw 'Something went wrong obtaining access token';
+            }
+
+            // Create a Firebase credential with the AccessToken
+            const facebookCredential = auth.FacebookAuthProvider.credential(
+              data.accessToken,
+            );
+            await auth()
+              .signInWithCredential(facebookCredential)
+
+              .then(() => {
+                console.log('current User', auth().currentUser);
+                firestore()
+                  .collection('Users')
+                  .doc(auth().currentUser.email)
+                  .set({
+                    DateOfBirthf: '',
+                    Scheduledate: '',
+                    Scheduletime: '',
+                    emailid: auth().currentUser.email,
+                    imageurl: null,
+                    phonenuber: '',
+                    device_token: device_id,
+                    is_online: 'true',
+                    createdAt: firestore.Timestamp.fromDate(new Date()),
+                  })
+
+                  .catch((error) => {
+                    console.log(
+                      'Something went wrong with added user to firestore: ',
+                      error,
+                    );
+                  });
+              })
+
               .catch((error) => {
                 console.log('Something went wrong with sign up: ', error);
               });

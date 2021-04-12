@@ -92,7 +92,7 @@ const LoginScreen = ({navigation}) => {
                 btnType="facebook"
                 color="#4867aa"
                 backgroundColor="#e6eaf4"
-                //onPress={() => fbLogin()}
+                onPress={() => fbLogin()}
               />
 
               <SocialButton

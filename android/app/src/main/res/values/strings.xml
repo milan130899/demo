@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">loginSignup</string>
+    <string name="facebook_app_id">471311294019280</string>
 </resources>
