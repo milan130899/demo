@@ -243,7 +243,7 @@ const ProfileScreen = ({navigation}) => {
   const getUser = async () => {
     const currentUser = await firestore()
       .collection('Users')
-      .doc(user.email)
+      .doc(user.email || user.phoneNumber)
       .get()
       .then((documentSnapshot) => {
         if (documentSnapshot.exists) {
@@ -264,7 +264,7 @@ const ProfileScreen = ({navigation}) => {
     }
     firestore()
       .collection('Users')
-      .doc(user.email)
+      .doc(user.email || user.phoneNumber)
       .update({
         DateOfBirthf: userData.DateOfBirthf,
         Scheduledate: userData.Scheduledate,
@@ -429,7 +429,9 @@ const ProfileScreen = ({navigation}) => {
                           <FontAwesome name="envelope" size={30} />
                         </View>
 
-                        <Text style={styles.emailText}>{user.email}</Text>
+                        <Text style={styles.emailText}>
+                          {user.email || user.phoneNumber}
+                        </Text>
                       </View>
 
                       <View

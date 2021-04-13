@@ -13,6 +13,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SpalshScreen from '../../src/components/SpalshScreen';
 import LoginScreen from '../../src/screens/LoginScreen';
 import SignUp from '../../src/screens/SignUp';
+import PhoneNumber from '../phoneAuth/PhoneNumber';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const AuthStack = () => {
         '220473869342-nmbftch7ln6gnst6a3v36ko65lslcjh2.apps.googleusercontent.com',
     });
   }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -31,6 +33,7 @@ const AuthStack = () => {
       <Stack.Screen name="Spalsh" component={SpalshScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={SignUp} />
+      <Stack.Screen name="PhoneAuth" component={PhoneNumber} />
     </Stack.Navigator>
   );
 };

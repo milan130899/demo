@@ -94,13 +94,21 @@ const LoginScreen = ({navigation}) => {
                 backgroundColor="#e6eaf4"
                 onPress={() => fbLogin()}
               />
-
               <SocialButton
                 buttonTitle="Sign In with Google"
                 btnType="google"
                 color="#de4d41"
                 backgroundColor="#f5e7ea"
                 onPress={() => googleLogin()}
+              />
+              <SocialButton
+                buttonTitle="Sign In with Phone Number"
+                btnType="phone"
+                color="#242423"
+                backgroundColor="#E1FAD6"
+                onPress={() => {
+                  navigation.navigate('PhoneAuth');
+                }}
               />
             </View>
           ) : null}

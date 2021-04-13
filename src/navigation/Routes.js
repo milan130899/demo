@@ -17,7 +17,7 @@ const Routes = () => {
     if (user) {
       await firestore()
         .collection('Users')
-        .doc(user.email)
+        .doc(user.email || user.phoneNumber)
         .onSnapshot((documentSnapshot) => {
           const data_device = documentSnapshot.data();
 
