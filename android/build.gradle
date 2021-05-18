@@ -10,6 +10,7 @@ buildscript {
         targetSdkVersion = 29
         supportLibVersion = "23.1.1" // default: 23.1.1
         googlePlayServicesAuthVersion = "16.0.1"
+        firebaseMessagingVersion = "21.1.0"
     }
     repositories {
         google()
