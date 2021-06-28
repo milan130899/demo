@@ -4,24 +4,29 @@ import {IconButton, Title} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
+import CryptoJS from 'crypto-js';
 
 export default function AddRoomScreen({navigation}) {
   const [roomName, setRoomName] = useState('');
 
   function handleButtonPress() {
     if (roomName.length > 0) {
+      var ciphertext = CryptoJS.AES.encrypt(
+        `You have joined the room ${roomName}.`,
+        'secretkey',
+      ).toString();
       firestore()
         .collection('THREADS')
         .add({
           name: roomName,
           latestMessage: {
-            text: `You have joined the room ${roomName}.`,
+            text: ciphertext,
             createdAt: new Date().getTime(),
           },
         })
         .then((docRef) => {
           docRef.collection('MESSAGES').add({
-            text: `You have joined the room ${roomName}.`,
+            text: ciphertext,
             createdAt: new Date().getTime(),
             system: true,
           });

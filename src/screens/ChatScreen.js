@@ -18,6 +18,7 @@ import {AuthContext} from '../navigation/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CryptoJS from 'crypto-js';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 export default function ChatScreen({route}) {
   const [messages, setMessages] = useState([]);
@@ -28,13 +29,13 @@ export default function ChatScreen({route}) {
 
   async function handleSend(messages) {
     const text = messages[0].text;
-
+    var ciphertext = CryptoJS.AES.encrypt(text, 'secretkey').toString();
     firestore()
       .collection('THREADS')
       .doc(thread._id)
       .collection('MESSAGES')
       .add({
-        text,
+        text: ciphertext,
         createdAt: new Date().getTime(),
         user: {
           _id: currentUser.uid,
@@ -48,7 +49,7 @@ export default function ChatScreen({route}) {
       .set(
         {
           latestMessage: {
-            text,
+            text: ciphertext,
             createdAt: new Date().getTime(),
           },
         },
@@ -80,6 +81,8 @@ export default function ChatScreen({route}) {
         const messages = querySnapshot.docs.map((doc) => {
           const firebaseData = doc.data();
 
+          var bytes = CryptoJS.AES.decrypt(firebaseData.text, 'secretkey');
+          firebaseData.text = bytes.toString(CryptoJS.enc.Utf8);
           const data = {
             _id: doc.id,
             text: '',
