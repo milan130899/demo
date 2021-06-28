@@ -116,7 +116,7 @@ export default class Notifications extends Component {
     collapsed: true,
     multipleSelect: false,
   };
-
+  //com
   toggleExpanded = () => {
     this.setState({collapsed: !this.state.collapsed});
   };
