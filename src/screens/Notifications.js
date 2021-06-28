@@ -120,7 +120,7 @@ export default class Notifications extends Component {
   toggleExpanded = () => {
     this.setState({collapsed: !this.state.collapsed});
   };
-  //
+  
   setSections = (sections) => {
     this.setState({
       activeSections: sections.includes(undefined) ? [] : sections,
